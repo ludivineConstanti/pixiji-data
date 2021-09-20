@@ -3,36 +3,54 @@ const { buildSchema } = require("graphql");
 const schema = buildSchema(`
 type Query {
   allUsers: [User]
-  getUser(user: InputUser): feedback
+  getUser(input: InputUser): Feedback
+  getWorstScores(input: InputWorstScores): WorstScores
+  
 }
 type Mutation {
-  createUser(user: InputUser): feedback
-  setScore(score: InputScore): feedback
-}
-type User {
-  email: String
-  password: String
+  createUser(input: InputUser): Feedback
+  setScore(input: InputScore): Feedback
 }
 input InputUser {
   email: String
   password: String
 }
-type UserScore {
-  quizId: Int
-  kanjiId: Int
-  answeredWrong: Int
-  answeredRight: Int
-  score: Int
+type User {
+  email: String
+  password: String
 }
 input InputScore {
   email: String
   kanjiId: String
-  quizId: String
   isCorrect: Boolean
 }
-type feedback {
+type Feedback {
   message: String
   success: Boolean
+}
+input InputWorstScores { 
+  email: String
+}
+type WorstScores {
+  quiz1: [BadScore]
+  quiz2: [BadScore]
+  quiz3: [BadScore]
+}
+type BadScore {
+  answer: Answer
+  infosAnswer: InfosAnswer
+}
+type Answer {
+  id: Int
+  kanji: String
+  en: String
+  kana: String
+  kanaEn: String
+  quizId: Int
+}
+type InfosAnswer {
+  answeredRight: Int
+  answeredWrong: Int
 }
 `);
 
