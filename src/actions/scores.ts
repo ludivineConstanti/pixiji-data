@@ -1,8 +1,16 @@
-const dataScores = [];
+interface KanjiScoreProps {
+  answer: number;
+  infosAnswer: {
+    answeredRight: string[];
+    answeredWrong: string[];
+  };
+}
 
-const utilsGetUserScore = (email) =>
+const dataScores: { email: string; kanjis: KanjiScoreProps[] }[] = [];
+
+const utilsGetUserScore = (email: string) =>
   dataScores.filter((e) => e.email === email)[0];
-const utilsGetScores = (input) => {
+const utilsGetScores = (input: { email: string }) => {
   const { email } = input;
 
   const userScore = utilsGetUserScore(email);
@@ -13,10 +21,14 @@ const utilsGetScores = (input) => {
   return userScore.kanjis;
 };
 
-const actionsScores = {
-  setScore: ({ input }) => {
+module.exports = {
+  setScore: ({
+    input,
+  }: {
+    input: { email: string; kanjiId: number; isCorrect: boolean };
+  }) => {
     const { email, kanjiId, isCorrect } = input;
-    const date = new Date();
+    const date = new Date().toString();
 
     const user = utilsGetUserScore(email);
     const kanjiScore = {
@@ -38,7 +50,7 @@ const actionsScores = {
       };
     }
     const currentKanjiScore = user.kanjis.filter(
-      (e) => e.answer.id === +kanjiId
+      (e) => e.answer === +kanjiId
     )[0];
     if (!currentKanjiScore) {
       user.kanjis.push(kanjiScore);
@@ -63,7 +75,7 @@ const actionsScores = {
       message: "None of the given options were triggered",
     };
   },
-  getScore: ({ input }) => {
+  getScore: ({ input }: { input: { email: string; kanjiId: number } }) => {
     const results = utilsGetScores(input);
     const score = results.filter((e) => e.answer === input.kanjiId);
 
@@ -74,12 +86,12 @@ const actionsScores = {
           infosAnswer: { answeredRight: [], answeredWrong: [] },
         };
   },
-  getScores: ({ input }) => {
+  getScores: ({ input }: { input: { email: string } }) => {
     const result = utilsGetScores(input);
 
     return { scores: result };
   },
-  getWorstScores: ({ input }) => {
+  getWorstScores: ({ input }: { input: { email: string } }) => {
     const result = utilsGetScores(input);
 
     const scores = result.filter((e) => e.infosAnswer.answeredWrong.length);
@@ -87,5 +99,3 @@ const actionsScores = {
     return { scores };
   },
 };
-
-module.exports = actionsScores;

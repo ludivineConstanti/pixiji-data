@@ -1,11 +1,15 @@
 const bcrypt = require("bcrypt");
 
-const dataUsers = [];
+const dataUsers: { email: string; password: string }[] = [];
 
-const actionsUsers = {
+module.exports = {
   allUsers: () => dataUsers,
 
-  createUser: async ({ input }) => {
+  createUser: async ({
+    input,
+  }: {
+    input: { email: string; password: string };
+  }) => {
     const { email, password } = input;
 
     const feedback = {
@@ -31,7 +35,11 @@ const actionsUsers = {
     return feedback;
   },
 
-  getUser: async ({ input }) => {
+  getUser: async ({
+    input,
+  }: {
+    input: { email: string; password: string };
+  }) => {
     const { email, password } = input;
 
     const match = dataUsers.filter((e) => e.email === email)[0];
@@ -56,5 +64,3 @@ const actionsUsers = {
     return feedback;
   },
 };
-
-module.exports = actionsUsers;
