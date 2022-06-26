@@ -1,6 +1,5 @@
 const { buildSchema } = require("graphql");
-
-const schema = buildSchema(`
+module.exports = buildSchema(`
 type Query {
   allUsers: [User]
   getUser(input: InputUser): Feedback
@@ -49,5 +48,4 @@ type InfosAnswer {
   answeredWrong: [String]
 }
 `);
-
-module.exports = schema;
+//# sourceMappingURL=schema.js.map
