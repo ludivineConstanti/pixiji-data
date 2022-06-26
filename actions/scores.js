@@ -1,24 +1,29 @@
-const dataKanjis = require("../data/kanjis");
-const dataQuizzes = require("../data/quizzes");
 const dataScores = [];
 
-const utils = {
-  getUserScore: (email) => dataScores.filter((e) => e.email === email)[0],
+const utilsGetUserScore = (email) =>
+  dataScores.filter((e) => e.email === email)[0];
+const utilsGetScores = (input) => {
+  const { email } = input;
+
+  const userScore = utilsGetUserScore(email);
+  if (!userScore) {
+    return [];
+  }
+
+  return userScore.kanjis;
 };
 
 const actionsScores = {
   setScore: ({ input }) => {
     const { email, kanjiId, isCorrect } = input;
-    const currentKanji = dataKanjis.filter((e) => e.id === +kanjiId)[0];
+    const date = new Date();
 
-    const user = utils.getUserScore(email);
+    const user = utilsGetUserScore(email);
     const kanjiScore = {
-      answer: {
-        ...currentKanji,
-      },
+      answer: kanjiId,
       infosAnswer: {
-        answeredRight: isCorrect ? 1 : 0,
-        answeredWrong: isCorrect ? 0 : 1,
+        answeredRight: isCorrect ? [date] : [],
+        answeredWrong: isCorrect ? [] : [date],
       },
     };
     if (!user) {
@@ -43,14 +48,14 @@ const actionsScores = {
       };
     }
     if (isCorrect) {
-      currentKanjiScore.infosAnswer.answeredRight += 1;
+      currentKanjiScore.infosAnswer.answeredRight.push(date);
       return {
         success: true,
         message: "Great, your score augmented by 1 point",
       };
     }
     if (!isCorrect) {
-      currentKanjiScore.infosAnswer.answeredWrong += 1;
+      currentKanjiScore.infosAnswer.answeredWrong.push(date);
       return { success: true, message: "Your score decreased by 1 point" };
     }
     return {
@@ -58,47 +63,28 @@ const actionsScores = {
       message: "None of the given options were triggered",
     };
   },
+  getScore: ({ input }) => {
+    const results = utilsGetScores(input);
+    const score = results.filter((e) => e.answer === input.kanjiId);
+
+    return score.length
+      ? score[0]
+      : {
+          answer: input.kanjiId,
+          infosAnswer: { answeredRight: [], answeredWrong: [] },
+        };
+  },
+  getScores: ({ input }) => {
+    const result = utilsGetScores(input);
+
+    return { scores: result };
+  },
   getWorstScores: ({ input }) => {
-    const { email } = input;
-    const worstScores = {};
+    const result = utilsGetScores(input);
 
-    const userScore = utils.getUserScore(email);
-    if (!userScore) {
-      dataQuizzes.forEach((quiz) => {
-        worstScores[`quiz${quiz.id}`] = [];
-      });
-      return worstScores;
-    }
+    const scores = result.filter((e) => e.infosAnswer.answeredWrong.length);
 
-    dataQuizzes.forEach((quiz) => {
-      const quizScore = userScore.kanjis.filter(
-        (e) => e.answer.quizId === quiz.id
-      );
-      if (!quizScore) {
-        worstScores[`quiz${quiz.id}`] = [];
-      }
-      if (quizScore) {
-        const currentWorstScore = [];
-
-        quizScore.sort((a, b) => {
-          return (
-            a.answeredWrong -
-            a.answeredRight -
-            (b.answeredWrong - b.answeredRight)
-          );
-        });
-        const itemNum = Math.ceil(
-          dataKanjis.filter((e) => e.quizId === quiz.id).length / 12
-        );
-
-        for (let i = 0; i < itemNum && i < quizScore.length; i++) {
-          currentWorstScore.push(quizScore[i]);
-        }
-        worstScores[`quiz${quiz.id}`] = currentWorstScore;
-      }
-    });
-
-    return worstScores;
+    return { scores };
   },
 };
 

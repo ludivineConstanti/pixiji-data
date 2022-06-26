@@ -26,7 +26,7 @@ const actionsUsers = {
     dataUsers.push({ email, password: hashedPassword });
     feedback.success = true;
     feedback.message =
-      "Great! You are now registered! You can go to the quizzes page by clicking on the button below.";
+      "Great! You are now registered! You can now go to the quizzes page to test your kanji knowledge.";
 
     return feedback;
   },

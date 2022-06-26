@@ -4,12 +4,14 @@ const schema = buildSchema(`
 type Query {
   allUsers: [User]
   getUser(input: InputUser): Feedback
-  getWorstScores(input: InputWorstScores): WorstScores
+  getScore(input: InputGetScore): Score
+  getScores(input: InputGetScores): Scores
+  getWorstScores(input: InputGetScores): Scores
   
 }
 type Mutation {
   createUser(input: InputUser): Feedback
-  setScore(input: InputScore): Feedback
+  setScore(input: InputSetScore): Feedback
 }
 input InputUser {
   email: String
@@ -19,7 +21,7 @@ type User {
   email: String
   password: String
 }
-input InputScore {
+input InputSetScore {
   email: String
   kanjiId: String
   isCorrect: Boolean
@@ -28,29 +30,23 @@ type Feedback {
   message: String
   success: Boolean
 }
-input InputWorstScores { 
+input InputGetScore { 
+  email: String
+  kanjiId: String
+}
+input InputGetScores { 
   email: String
 }
-type WorstScores {
-  quiz1: [BadScore]
-  quiz2: [BadScore]
-  quiz3: [BadScore]
+type Scores {
+  scores: [Score]
 }
-type BadScore {
-  answer: Answer
+type Score {
+  answer: Int
   infosAnswer: InfosAnswer
-}
-type Answer {
-  id: Int
-  kanji: String
-  en: String
-  kana: String
-  kanaEn: String
-  quizId: Int
-}
+} 
 type InfosAnswer {
-  answeredRight: Int
-  answeredWrong: Int
+  answeredRight: [String]
+  answeredWrong: [String]
 }
 `);
 
