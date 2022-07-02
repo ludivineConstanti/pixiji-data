@@ -1,8 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "build",
-    "rootDir": "src",
     "target": "esnext",
     "module": "esnext",
     "jsx": "preserve",
@@ -16,8 +14,14 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types"],
-    "lib": ["dom", "es2015", "es2016"],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "lib": [
+      "dom",
+      "es2015",
+      "es2016"
+    ],
     "plugins": [
       {
         "name": "typescript-tslint-plugin",
