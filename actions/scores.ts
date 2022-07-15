@@ -11,7 +11,7 @@ interface KanjiScoreProps {
 const dataScores: { email: string; kanjis: KanjiScoreProps[] }[] = [dummyUser];
 
 const utilsGetUserScore = (email: string) =>
-  dataScores.filter((e) => e.email === email)[0];
+  dataScores.find((e) => e.email === email);
 const utilsGetScores = (input: { email: string }) => {
   const { email } = input;
 
@@ -31,15 +31,21 @@ module.exports = {
   setScore: ({
     input,
   }: {
-    input: { email: string; kanjiId: number; isCorrect: boolean };
+    input: {
+      email: string;
+      kanjiId: number;
+      quizId: number;
+      isCorrect: boolean;
+    };
   }) => {
-    const { email, kanjiId, isCorrect } = input;
+    const { email, kanjiId, quizId, isCorrect } = input;
     const date = returnformattedDate();
 
     const user = utilsGetUserScore(email);
 
     const kanjiScore = {
       answer: kanjiId,
+      quizId: quizId,
       infosAnswer: {
         answeredRight: isCorrect ? [date] : [],
         answeredWrong: isCorrect ? [] : [date],

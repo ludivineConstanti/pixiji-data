@@ -3,6 +3,7 @@ module.exports = {
   kanjis: [
     {
       answer: 1,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -32,6 +33,7 @@ module.exports = {
     },
     {
       answer: 2,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -61,6 +63,7 @@ module.exports = {
     },
     {
       answer: 5,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -90,6 +93,7 @@ module.exports = {
     },
     {
       answer: 13,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -119,6 +123,7 @@ module.exports = {
     },
     {
       answer: 15,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -148,6 +153,7 @@ module.exports = {
     },
     {
       answer: 21,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -177,6 +183,7 @@ module.exports = {
     },
     {
       answer: 22,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -206,6 +213,7 @@ module.exports = {
     },
     {
       answer: 26,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -235,6 +243,7 @@ module.exports = {
     },
     {
       answer: 28,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -264,6 +273,7 @@ module.exports = {
     },
     {
       answer: 30,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -293,6 +303,7 @@ module.exports = {
     },
     {
       answer: 36,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -322,6 +333,7 @@ module.exports = {
     },
     {
       answer: 56,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -351,6 +363,7 @@ module.exports = {
     },
     {
       answer: 57,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -380,6 +393,7 @@ module.exports = {
     },
     {
       answer: 58,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -409,6 +423,7 @@ module.exports = {
     },
     {
       answer: 60,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -438,6 +453,7 @@ module.exports = {
     },
     {
       answer: 63,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
@@ -467,6 +483,7 @@ module.exports = {
     },
     {
       answer: 65,
+      quizId: 1,
       infosAnswer: {
         answeredRight: [
           "21-05-08",
