@@ -1,3 +1,5 @@
+const dummyUser = require("../data/dummyUser");
+
 interface KanjiScoreProps {
   answer: number;
   infosAnswer: {
@@ -6,10 +8,14 @@ interface KanjiScoreProps {
   };
 }
 
-const dataScores: { email: string; kanjis: KanjiScoreProps[] }[] = [];
+const dataScores: { email: string; kanjis: KanjiScoreProps[] }[] = [dummyUser];
 
 const utilsGetUserScore = (email: string) =>
-  dataScores.filter((e) => e.email === email)[0];
+  dataScores.find((e) => e.email === email);
+
+const utilsGetKanji = (kanjis: KanjiScoreProps[], id: number | string) =>
+  kanjis.find((e) => +e.answer === +id);
+
 const utilsGetScores = (input: { email: string }) => {
   const { email } = input;
 
@@ -21,23 +27,35 @@ const utilsGetScores = (input: { email: string }) => {
   return userScore.kanjis;
 };
 
+const returnformattedDate = () => {
+  return new Date().toISOString().slice(0, 10);
+};
+
 module.exports = {
   setScore: ({
     input,
   }: {
-    input: { email: string; kanjiId: number; isCorrect: boolean };
+    input: {
+      email: string;
+      kanjiId: number;
+      quizId: number;
+      isCorrect: boolean;
+    };
   }) => {
-    const { email, kanjiId, isCorrect } = input;
-    const date = new Date().toString();
+    const { email, kanjiId, quizId, isCorrect } = input;
+    const date = returnformattedDate();
 
     const user = utilsGetUserScore(email);
+
     const kanjiScore = {
       answer: kanjiId,
+      quizId: quizId,
       infosAnswer: {
         answeredRight: isCorrect ? [date] : [],
         answeredWrong: isCorrect ? [] : [date],
       },
     };
+
     if (!user) {
       dataScores.push({
         email,
@@ -49,26 +67,27 @@ module.exports = {
           "This is the first answer that was registered on your account, congratulation!",
       };
     }
-    const currentKanjiScore = user.kanjis.filter(
-      (e) => e.answer === +kanjiId
-    )[0];
+
+    const currentKanjiScore = utilsGetKanji(user.kanjis, kanjiId);
+
     if (!currentKanjiScore) {
       user.kanjis.push(kanjiScore);
       return {
         success: true,
         message: "This is the first answer that was registered For this Kanji",
       };
-    }
-    if (isCorrect) {
-      currentKanjiScore.infosAnswer.answeredRight.push(date);
-      return {
-        success: true,
-        message: "Great, your score augmented by 1 point",
-      };
-    }
-    if (!isCorrect) {
-      currentKanjiScore.infosAnswer.answeredWrong.push(date);
-      return { success: true, message: "Your score decreased by 1 point" };
+    } else if (currentKanjiScore) {
+      if (isCorrect) {
+        currentKanjiScore.infosAnswer.answeredRight.push(date);
+        return {
+          success: true,
+          message: "Great, your score augmented by 1 point",
+        };
+      }
+      if (!isCorrect) {
+        currentKanjiScore.infosAnswer.answeredWrong.push(date);
+        return { success: true, message: "Your score decreased by 1 point" };
+      }
     }
     return {
       success: false,
@@ -77,10 +96,11 @@ module.exports = {
   },
   getScore: ({ input }: { input: { email: string; kanjiId: number } }) => {
     const results = utilsGetScores(input);
-    const score = results.filter((e) => e.answer === input.kanjiId);
 
-    return score.length
-      ? score[0]
+    const score = utilsGetKanji(results, input.kanjiId);
+
+    return score
+      ? score
       : {
           answer: input.kanjiId,
           infosAnswer: { answeredRight: [], answeredWrong: [] },
