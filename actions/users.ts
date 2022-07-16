@@ -31,7 +31,7 @@ const checks = {
     if (!validPassword) {
       return {
         success: false,
-        message: "Sorry, the password is incorrect.",
+        message: "Sorry, this password is not your current password.",
       };
     }
   },
@@ -44,10 +44,14 @@ module.exports = {
     input: { email: string; password: string };
   }) => {
     const { email, password } = input;
+    let triggeredCheck;
 
     const existingUser = dataUsers.find((e) => e.email === email);
 
-    checks.emailShouldNotExist(existingUser);
+    triggeredCheck = checks.emailShouldNotExist(existingUser);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     const hashedPassword = await util.returnEncryptedPassword(password);
 
@@ -65,20 +69,27 @@ module.exports = {
     input: { email: string; password: string };
   }) => {
     const { email, password } = input;
+    let triggeredCheck;
 
     const existingUser = dataUsers.find((e) => e.email === email);
 
-    checks.emailShouldExist(existingUser);
+    triggeredCheck = checks.emailShouldExist(existingUser);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     const validPassword = await bcrypt.compare(password, existingUser.password);
 
-    checks.passwordIsCorrect(validPassword);
+    triggeredCheck = checks.passwordIsCorrect(validPassword);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     dataUsers = dataUsers.filter((e) => e.email !== email);
 
     return {
       success: true,
-      message: "Your account was successfully deleted",
+      message: "Your account was successfully deleted.",
     };
   },
   setUserEmail: async ({
@@ -87,24 +98,34 @@ module.exports = {
     input: { email: string; newEmail: string; password: string };
   }) => {
     const { email, newEmail, password } = input;
+    let triggeredCheck;
 
-    const userWithNewEmail = dataUsers.find((e) => e.email === email);
+    const userWithNewEmail = dataUsers.find((e) => e.email === newEmail);
 
-    checks.emailShouldNotExist(userWithNewEmail);
+    triggeredCheck = checks.emailShouldNotExist(userWithNewEmail);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     const existingUser = dataUsers.find((e) => e.email === email);
 
-    checks.emailShouldExist(existingUser);
+    triggeredCheck = checks.emailShouldExist(existingUser);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     const validPassword = await bcrypt.compare(password, existingUser.password);
 
-    checks.passwordIsCorrect(validPassword);
+    triggeredCheck = checks.passwordIsCorrect(validPassword);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     existingUser.email = newEmail;
 
     return {
       success: true,
-      message: "Your email address is updated",
+      message: `Your email address is now ${newEmail}.`,
     };
   },
   setUserPassword: async ({
@@ -113,20 +134,30 @@ module.exports = {
     input: { email: string; password: string; newPassword: string };
   }) => {
     const { email, password, newPassword } = input;
+    let triggeredCheck;
 
     const existingUser = dataUsers.find((e) => e.email === email);
 
-    checks.emailShouldExist(existingUser);
+    triggeredCheck = checks.emailShouldExist(existingUser);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     const validPassword = await bcrypt.compare(password, existingUser.password);
 
-    checks.passwordIsCorrect(validPassword);
+    triggeredCheck = checks.passwordIsCorrect(validPassword);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     const hashedNewPassword = await util.returnEncryptedPassword(newPassword);
 
     existingUser.password = hashedNewPassword;
 
-    return input;
+    return {
+      success: true,
+      message: `Your password has been successfully updated.`,
+    };
   },
   getUser: async ({
     input,
@@ -134,16 +165,23 @@ module.exports = {
     input: { email: string; password: string };
   }) => {
     const { email, password } = input;
+    let triggeredCheck;
 
     const match = dataUsers.find((e) => e.email === email);
 
-    checks.emailShouldExist(match);
+    triggeredCheck = checks.emailShouldExist(match);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     // first argument is password that we get from form (not encrypted)
     // second argument is password from database (crypted)
     const validPassword = await bcrypt.compare(password, match.password);
 
-    checks.passwordIsCorrect(validPassword);
+    triggeredCheck = checks.passwordIsCorrect(validPassword);
+    if (triggeredCheck) {
+      return triggeredCheck;
+    }
 
     return {
       success: true,
