@@ -12,6 +12,10 @@ const dataScores: { email: string; kanjis: KanjiScoreProps[] }[] = [dummyUser];
 
 const utilsGetUserScore = (email: string) =>
   dataScores.find((e) => e.email === email);
+
+const utilsGetKanji = (kanjis: KanjiScoreProps[], id: number | string) =>
+  kanjis.find((e) => +e.answer === +id);
+
 const utilsGetScores = (input: { email: string }) => {
   const { email } = input;
 
@@ -64,7 +68,7 @@ module.exports = {
       };
     }
 
-    const currentKanjiScore = user.kanjis.find((e) => +e.answer === +kanjiId);
+    const currentKanjiScore = utilsGetKanji(user.kanjis, kanjiId);
 
     if (!currentKanjiScore) {
       user.kanjis.push(kanjiScore);
@@ -92,7 +96,8 @@ module.exports = {
   },
   getScore: ({ input }: { input: { email: string; kanjiId: number } }) => {
     const results = utilsGetScores(input);
-    const score = results.find((e) => e.answer === input.kanjiId);
+
+    const score = utilsGetKanji(results, input.kanjiId);
 
     return score
       ? score
